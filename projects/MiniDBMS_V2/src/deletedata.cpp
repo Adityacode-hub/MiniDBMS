@@ -1,4 +1,4 @@
-#include "Deleterecord.hpp"
+#include "../include/Deleterecord.hpp"
 #include<fstream>
 #include <iostream>
 using namespace std;

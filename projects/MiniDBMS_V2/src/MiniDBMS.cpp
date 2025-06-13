@@ -1,5 +1,6 @@
-#include "MiniDBMS.hpp"
+#include "../include/MiniDBMS.hpp"
 #include <iostream>
+#include<sstream>
 #include <fstream>
 
 using namespace std;
@@ -85,9 +86,113 @@ void MiniDBMS::loadtable(string tablename, string filename) {
 }
 
 // Destructor to free dynamically allocated DeleteRecord objects
+
+
+    // Assuming your table class has dumpToFile method
+ 
+
+void MiniDBMS::query(const string& sql)
+{
+    string command=getcommandType(sql);
+    if(command=="INSERT")
+    {
+        handleInsert(sql);
+    }
+   else if(command=="CREATE")
+    {
+        handleCreate(sql);
+    }
+   else if(command=="UPDATE")
+    {
+             handleUpdate(sql);
+    }
+    else if(command=="DELETE")
+    {
+        handleDelete(sql);
+    }
+    else if(command=="SELECT")
+    {
+          handleSelect(sql);
+    }
+    else
+    {
+        cout<<"INVALID QUERY \n";
+    }
+}
+
+void MiniDBMS::handleInsert(const string& sql) {
+    string command, intoKeyword, table, valuesKeyword, name;
+    int id;
+    stringstream ss(sql);
+    ss >> command >> intoKeyword >> table >> valuesKeyword >> id >> name;
+    
+    if (command == "INSERT" && intoKeyword == "INTO" && valuesKeyword == "VALUES") {
+        insertinto(table, id, name);
+    } else {
+        cout << "Invalid INSERT query format.\n";
+    }
+}
+
+void MiniDBMS::handleCreate(const string& sql)
+{
+    string command,tableKeyword,tablename;
+    stringstream ss(sql);
+    ss>>command>>tableKeyword>>tablename;
+    if(command=="CREATE"&& tableKeyword=="TABLE")
+    {
+        createtable(tablename);
+    }
+    else{
+        cout<<"invalid CREATE TABLE query format.\n";
+    }
+}
+void MiniDBMS::handleUpdate(const string& sql)
+{
+    string command,tableKeyword,tablename,newname;
+    int id;
+    stringstream ss(sql);
+    ss>>command>>tableKeyword>>tablename>>id>>newname;
+    if(command=="UPDATE"&& tableKeyword=="TABLE")
+    {
+        updatein(tablename,id,newname);
+    }
+    else{
+        cout<<"Invalid UPDATE query format.\n";
+    }
+}
+void MiniDBMS::handleDelete(const string& sql)
+{
+    string command,tableKeyword,tablename;
+    int id;
+    stringstream ss(sql);
+    ss>>command>>tableKeyword>>tablename>>id;
+    if(command=="DELETE"&& tableKeyword=="TABLE")
+    {
+        deletefrom(tablename,id);
+    } 
+}
+void MiniDBMS::handleSelect(const string& sql)
+{
+    string command,tableKeyword,tablename;
+    stringstream ss(sql);
+    ss>>command>>tableKeyword>>tablename;
+    if(command=="SELECT" && tableKeyword=="TABLE")
+    {
+        showtable(tablename);
+
+    }
+}
+std::string MiniDBMS::getcommandType(const std::string& sql) {
+    std::stringstream ss(sql);
+    std::string command;
+    ss >> command;
+    return command;
+}
+
 MiniDBMS::~MiniDBMS() {
     for (auto& pair : tables) {
         delete pair.second;
     }
-    tables.clear();
 }
+
+
