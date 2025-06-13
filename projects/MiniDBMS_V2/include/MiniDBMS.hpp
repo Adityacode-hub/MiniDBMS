@@ -36,6 +36,13 @@ public:
     void loadtable(string tablename, string filename);
 
     // Destructor to free dynamically allocated Deleterecord objects
+    void query(const string& sql);
+    string getcommandType(const string& sql);
+    void handleInsert(const string& sql);
+    void handleCreate(const string& sql);
+    void handleUpdate(const string& sql);
+    void handleDelete(const string& sql);
+    void handleSelect(const string& sql);
     ~MiniDBMS();
 };
 
